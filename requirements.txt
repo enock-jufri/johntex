@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+asyncpg
+alembic
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt==4.0.1
+python-multipart
+pydantic
+pydantic-settings
+python-dotenv
+httpx
+prometheus-client
+prometheus-fastapi-instrumentator
+slowapi

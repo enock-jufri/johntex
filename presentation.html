@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Johntex Payroll System</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/theme/black.css">
+<style>
+  :root {
+    --blue: #3b82f6;
+    --blue-dark: #1d4ed8;
+    --emerald: #10b981;
+    --amber: #f59e0b;
+    --purple: #8b5cf6;
+    --red: #ef4444;
+    --slate-700: #334155;
+    --slate-800: #1e293b;
+    --slate-900: #0f172a;
+    --text: #e2e8f0;
+    --text-muted: #94a3b8;
+  }
+
+  .reveal {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 28px;
+  }
+
+  .reveal h1, .reveal h2, .reveal h3 {
+    text-transform: none;
+    font-weight: 700;
+  }
+
+  .reveal .slides section {
+    padding: 40px 60px;
+  }
+
+  /* Slide 1: Title */
+  .title-slide {
+    text-align: center !important;
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .title-slide h1 {
+    font-size: 3.2em;
+    background: linear-gradient(135deg, var(--blue), var(--emerald));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 0.2em;
+  }
+  .title-slide .subtitle {
+    font-size: 1.3em;
+    color: var(--text-muted);
+    margin-bottom: 1em;
+    font-weight: 400;
+  }
+  .title-slide .tagline {
+    font-size: 0.9em;
+    color: var(--blue);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+  .title-slide .brand {
+    margin-top: 2em;
+    font-size: 0.7em;
+    color: var(--text-muted);
+    opacity: 0.6;
+  }
+
+  /* Slide 2: Problem & Solution */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    text-align: left;
+  }
+  .problem-col h3, .solution-col h3 {
+    font-size: 1.1em;
+    margin-bottom: 12px;
+  }
+  .problem-col h3 { color: var(--red); }
+  .solution-col h3 { color: var(--emerald); }
+  .problem-col ul, .solution-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .problem-col li, .solution-col li {
+    padding: 8px 14px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    font-size: 0.6em;
+    line-height: 1.4;
+  }
+  .problem-col li {
+    background: rgba(239, 68, 68, 0.1);
+    border-left: 4px solid var(--red);
+  }
+  .solution-col li {
+    background: rgba(16, 185, 129, 0.1);
+    border-left: 4px solid var(--emerald);
+  }
+
+  /* Slide 3: Feature Cards */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: left;
+  }
+  .feature-card {
+    background: var(--slate-800);
+    border-radius: 12px;
+    padding: 24px;
+    border-top: 3px solid var(--blue);
+  }
+  .feature-card .icon {
+    font-size: 1.6em;
+    margin-bottom: 10px;
+  }
+  .feature-card h4 {
+    font-size: 0.85em;
+    margin: 0 0 8px 0;
+    color: var(--text);
+  }
+  .feature-card p {
+    font-size: 0.6em;
+    color: var(--text-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Slide 4: Workflow */
+  .workflow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 30px 0;
+  }
+  .wf-step {
+    background: var(--slate-800);
+    border-radius: 12px;
+    padding: 20px 24px;
+    text-align: center;
+    min-width: 140px;
+    border-bottom: 4px solid var(--blue);
+  }
+  .wf-step .step-icon {
+    font-size: 1.8em;
+    margin-bottom: 8px;
+  }
+  .wf-step .step-label {
+    font-size: 0.7em;
+    font-weight: 600;
+  }
+  .wf-arrow {
+    font-size: 1.5em;
+    color: var(--text-muted);
+    margin: 0 12px;
+  }
+  .status-lifecycle {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    margin-top: 40px;
+  }
+  .status-badge {
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 0.65em;
+    font-weight: 600;
+  }
+  .status-pending { background: rgba(245, 158, 11, 0.2); color: var(--amber); }
+  .status-processing { background: rgba(139, 92, 246, 0.2); color: var(--purple); }
+  .status-paid { background: rgba(16, 185, 129, 0.2); color: var(--emerald); }
+
+  /* Slide 5: Analytics */
+  .analytics-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    text-align: left;
+    margin-bottom: 30px;
+  }
+  .analytics-item {
+    background: var(--slate-800);
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .analytics-item .ai-icon {
+    font-size: 1.5em;
+    flex-shrink: 0;
+  }
+  .analytics-item h4 {
+    font-size: 0.75em;
+    margin: 0 0 4px 0;
+  }
+  .analytics-item p {
+    font-size: 0.55em;
+    color: var(--text-muted);
+    margin: 0;
+  }
+  .monitoring-note {
+    background: rgba(139, 92, 246, 0.15);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 10px;
+    padding: 16px 24px;
+    font-size: 0.65em;
+    display: inline-block;
+  }
+
+  /* Slide 6: Tech & Benefits */
+  .tech-stack {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+  }
+  .tech-tag {
+    background: var(--slate-700);
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 0.65em;
+    font-weight: 500;
+  }
+  .benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    text-align: left;
+  }
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 0.7em;
+    background: var(--slate-800);
+    padding: 14px 18px;
+    border-radius: 8px;
+  }
+  .benefit-item .check {
+    color: var(--emerald);
+    font-weight: bold;
+    font-size: 1.2em;
+  }
+
+  /* Shared */
+  .slide-header {
+    margin-bottom: 20px;
+  }
+  .slide-header h2 {
+    margin: 0;
+    font-size: 1.4em;
+  }
+  .slide-header .divider {
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(135deg, var(--blue), var(--emerald));
+    margin-top: 8px;
+    border-radius: 2px;
+  }
+
+  /* Slide number */
+  .slide-num {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
+    font-size: 0.5em;
+    color: var(--text-muted);
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- Slide 1: Title -->
+<section class="title-slide">
+  <h1>Johntex Payroll System</h1>
+  <div class="subtitle">Garment Workshop Payroll &amp; Production Management</div>
+  <p class="tagline">Streamline production tracking, automate weekly payroll calculations, and disburse payments to workers instantly via M-Pesa — all with a complete audit trail.</p>
+  <div class="brand">Johntex Tailoring &bull; Kericho, Litein, Kenya</div>
+  <span class="slide-num">1 / 6</span>
+</section>
+
+<!-- Slide 2: Problem & Solution -->
+<section>
+  <div class="slide-header">
+    <h2>The Problem &amp; Our Solution</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="two-col">
+    <div class="problem-col">
+      <h3>&#x2716; The Challenges</h3>
+      <ul>
+        <li><strong>Manual payroll calculations</strong><br>Spreadsheets are error-prone and time-consuming when computing gross pay, advances, and net amounts for dozens of workers every week.</li>
+        <li><strong>No real-time visibility</strong><br>Workers don't know their earnings, advances taken, or wallet balance until payday. Disputes are common.</li>
+        <li><strong>Cash payments are messy</strong><br>Handling cash for every worker is slow, insecure, and leaves no digital record of who was paid when.</li>
+        <li><strong>No audit trail</strong><br>Without tracking who approved what and when, financial discrepancies are impossible to investigate.</li>
+      </ul>
+    </div>
+    <div class="solution-col">
+      <h3>&#x2714; The Solution</h3>
+      <ul>
+        <li><strong>Automated weekly payroll</strong><br>One-click payroll run computes gross pay from approved production logs, deducts outstanding advances, and produces net pay for every active worker.</li>
+        <li><strong>Real-time worker wallets</strong><br>Every worker gets a live wallet showing total earned, advances taken, paid out, and current balance — updated instantly on every transaction.</li>
+        <li><strong>M-Pesa B2C integration</strong><br>Pay workers individually or in bulk via Safaricom M-Pesa. Real-time callback updates payment status. Cash payments also supported.</li>
+        <li><strong>Complete audit logging</strong><br>Every action — login, approval, payment, config change — is logged with user, IP, location, and timestamp for full traceability.</li>
+      </ul>
+    </div>
+  </div>
+  <span class="slide-num">2 / 6</span>
+</section>
+
+<!-- Slide 3: Key Features -->
+<section>
+  <div class="slide-header">
+    <h2>Key Features</h2>
+    <div class="divider"></div>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="icon">&#x1f9f5;</div>
+      <h4>Production Tracking</h4>
+      <p>Log daily garment pieces per worker by product type. Auto-calculates earnings from piece rates. Date-filtered views with search and pagination.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1f4ca;</div>
+      <h4>Payroll Automation</h4>
+      <p>Run weekly payroll with one click. Computes gross pay from approved production, deducts unpaid advances, and generates net pay for every active worker.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1f4f1;</div>
+      <h4>M-Pesa Integration</h4>
+      <p>Safaricom B2C v3 API for sending payments to worker phones. Single and bulk pay. Async callback handling updates payment status automatically.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1f4b0;</div>
+      <h4>Worker Wallet</h4>
+      <p>Real-time balance ledger per worker: total earned, advances taken, total paid, and current balance. Full transaction history with credit/debit/payout entries.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x2705;</div>
+      <h4>Approval Workflow</h4>
+      <p>Production logs and advance requests require supervisor approval. Single and bulk approve. Role-based: clerks enter, supervisors approve, admins pay.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">&#x1f4c8;</div>
+      <h4>Analytics Dashboard</h4>
+      <p>Revenue trends, product mix breakdown, worker productivity rankings, production volume charts, and financial summaries. CSV export for payroll data.</p>
+    </div>
+  </div>
+  <span class="slide-num">3 / 6</span>
+</section>
+
+<!-- Slide 4: Workflow -->
+<section>
+  <div class="slide-header">
+    <h2>How It Works</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="workflow">
+    <div class="wf-step">
+      <div class="step-icon">&#x270f;&#xfe0f;</div>
+      <div class="step-label">Production<br>Entry</div>
+    </div>
+    <div class="wf-arrow">&#x2192;</div>
+    <div class="wf-step">
+      <div class="step-icon">&#x2705;</div>
+      <div class="step-label">Supervisor<br>Approval</div>
+    </div>
+    <div class="wf-arrow">&#x2192;</div>
+    <div class="wf-step">
+      <div class="step-icon">&#x2699;&#xfe0f;</div>
+      <div class="step-label">Payroll<br>Run</div>
+    </div>
+    <div class="wf-arrow">&#x2192;</div>
+    <div class="wf-step">
+      <div class="step-icon">&#x1f4f1;</div>
+      <div class="step-label">M-Pesa<br>Payment</div>
+    </div>
+    <div class="wf-arrow">&#x2192;</div>
+    <div class="wf-step">
+      <div class="step-icon">&#x1f4b0;</div>
+      <div class="step-label">Wallet<br>Updated</div>
+    </div>
+  </div>
+
+  <p style="font-size:0.7em; color:var(--text-muted); margin-top:20px;">Dual payment methods: <strong>M-Pesa B2C</strong> for mobile money or <strong>Cash</strong> with manual confirmation.</p>
+
+  <div class="status-lifecycle">
+    <div class="status-badge status-pending">&#x25cf; Pending</div>
+    <div style="color:var(--text-muted);font-size:0.7em;">&#x2192;</div>
+    <div class="status-badge status-processing">&#x25cf; Processing</div>
+    <div style="color:var(--text-muted);font-size:0.7em;">&#x2192;</div>
+    <div class="status-badge status-paid">&#x25cf; Paid</div>
+  </div>
+  <p style="font-size:0.55em; color:var(--text-muted); margin-top:12px;">Payment status auto-updates via Safaricom callback. UI polls every 5 seconds while payments are processing.</p>
+
+  <span class="slide-num">4 / 6</span>
+</section>
+
+<!-- Slide 5: Analytics & Reporting -->
+<section>
+  <div class="slide-header">
+    <h2>Analytics &amp; Reporting</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="analytics-grid">
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f4c8;</div>
+      <div>
+        <h4>Revenue &amp; Production Trends</h4>
+        <p>Dual-axis area chart tracking revenue (KES) and garment pieces over time. Six time range presets from This Month to All Time.</p>
+      </div>
+    </div>
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f389;</div>
+      <div>
+        <h4>Product Mix Breakdown</h4>
+        <p>Donut chart showing revenue distribution across garment types. Identify your highest-value products at a glance.</p>
+      </div>
+    </div>
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f465;</div>
+      <div>
+        <h4>Worker Productivity</h4>
+        <p>Horizontal bar chart ranking top 10 workers by revenue contribution. Spot your top performers instantly.</p>
+      </div>
+    </div>
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f4c5;</div>
+      <div>
+        <h4>Daily Production Volume</h4>
+        <p>Bar chart of daily piece counts over the last 21 days. Track throughput trends and spot slowdowns early.</p>
+      </div>
+    </div>
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f4b5;</div>
+      <div>
+        <h4>Financial Summary</h4>
+        <p>Gross Revenue, Tailor Payments, Approved Advances, and Net (Revenue minus Payments) in a single snapshot.</p>
+      </div>
+    </div>
+    <div class="analytics-item">
+      <div class="ai-icon">&#x1f4e4;</div>
+      <div>
+        <h4>CSV Export</h4>
+        <p>Export payroll data to CSV with worker name, phone, week, gross pay, advances, net pay, method, and payment status.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="monitoring-note">
+    <strong>&#x1f6e1; System Monitoring:</strong> 5 pre-built Grafana dashboards cover API performance, M-Pesa payment metrics, payroll processing, security/auth events, and log aggregation via Loki + Prometheus + Alertmanager.
+  </div>
+
+  <span class="slide-num">5 / 6</span>
+</section>
+
+<!-- Slide 6: Technical Summary & Benefits -->
+<section>
+  <div class="slide-header">
+    <h2>Technical Summary &amp; Benefits</h2>
+    <div class="divider"></div>
+  </div>
+
+  <div class="tech-stack">
+    <div class="tech-tag">FastAPI</div>
+    <div class="tech-tag">React 18 + TypeScript</div>
+    <div class="tech-tag">PostgreSQL 16</div>
+    <div class="tech-tag">Docker Compose</div>
+    <div class="tech-tag">M-Pesa Daraja API</div>
+    <div class="tech-tag">Recharts</div>
+    <div class="tech-tag">Prometheus + Grafana</div>
+    <div class="tech-tag">Tainwind CSS</div>
+  </div>
+
+  <div class="benefits-grid">
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Role-based access control</strong> — Three tiers: Admin, Supervisor, Clerk. Each role sees only what they need.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Security first</strong> — JWT auth, bcrypt passwords, idle session timeout with auto-logout, sensitive data redaction in logs.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Mobile responsive</strong> — Works on desktop, tablet, and phone. Sidebar adapts to a slide-out sheet on small screens.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Dark &amp; light themes</strong> — System preference detection with manual toggle. Persisted across sessions.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Real-time payment tracking</strong> — UI polls payment status every 5 seconds while transactions are processing, stops automatically when resolved.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Full observability</strong> — Structured JSON logging, Prometheus metrics, Loki log aggregation, Grafana dashboards, Telegram alerts via Alertmanager.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Dockerized deployment</strong> — One-command dev startup with hot reload. Production mode with 4 workers, nginx, and baked images.</span>
+    </div>
+    <div class="benefit-item">
+      <span class="check">&#x2714;</span>
+      <span><strong>Complete audit trail</strong> — Every action logged with user, IP, geolocation, browser/OS, and timestamp. Filterable by action type and date.</span>
+    </div>
+  </div>
+
+  <span class="slide-num">6 / 6</span>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    transition: 'slide',
+    transitionSpeed: 'default',
+    backgroundTransition: 'fade',
+    center: true,
+    slideNumber: false,
+    width: 1200,
+    height: 700,
+    margin: 0.1,
+  });
+</script>
+</body>
+</html>

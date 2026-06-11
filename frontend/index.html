@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-gray-50 dark:bg-gray-950">
+  <head>
+    <script>
+      // Apply theme before paint to prevent flash of incorrect theme
+      (function() {
+        var theme = localStorage.getItem('theme');
+        if (!theme) {
+          theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        }
+        var html = document.documentElement;
+        var body = document.body;
+        if (theme === 'dark') {
+          html.classList.add('dark');
+          html.style.backgroundColor = '#0f172a';
+          body.style.backgroundColor = '#0f172a';
+        } else {
+          html.style.backgroundColor = '#f9fafb';
+          body.style.backgroundColor = '#f9fafb';
+        }
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Johntex Payroll</title>
+  </head>
+  <body class="bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100 antialiased">
+    <div id="root">
+      <div id="root-loader" style="display:flex;align-items:center;justify-content:center;height:100vh">
+        <div style="width:32px;height:32px;border:3px solid #d1d5db;border-top-color:#3b82f6;border-radius:50%;animation:root-spin 0.7s linear infinite"></div>
+      </div>
+      <style>@keyframes root-spin{to{transform:rotate(360deg)}}</style>
+    </div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
