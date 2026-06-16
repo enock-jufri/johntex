@@ -1,3 +1,4 @@
+import asyncio
 import logging
 
 from app.timezone import eat_now
@@ -65,12 +66,19 @@ async def login_for_access_token(
     result = await session.execute(select(Role).where(Role.id == user.role_id))
     role = result.scalars().first()
     role_name = role.name if role else "supervisor"
-    access_token = create_access_token(data={"sub": user.username, "role": role_name})
+    access_token = create_access_token(data={"sub": user.username, "role": role_name, "user_id": user.id})
 
     user.last_login = eat_now()
 
     ua = request.headers.get("User-Agent", "")[:256]
-    location = await resolve_location(ip) if ip else None
+
+    # Fire-and-forget geo-resolution to avoid blocking login
+    location = None
+    if ip and ip not in ("127.0.0.1", "::1", "localhost", ""):
+        try:
+            location = await asyncio.wait_for(resolve_location(ip), timeout=2.0)
+        except (asyncio.TimeoutError, Exception):
+            logger.debug("Geo-lookup timed out or failed for IP %s", ip)
 
     await crud_audit.log_action(
         session, user.id, "login", f"User {user.username} logged in",

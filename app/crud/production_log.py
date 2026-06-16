@@ -4,6 +4,7 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import desc
 
 from app.timezone import eat_now
 
@@ -13,9 +14,8 @@ from ..schemas import ProductionLogCreate, ProductionLogUpdate
 logger = logging.getLogger(__name__)
 
 
-async def get_production_log(session: AsyncSession, log_id: int):
-    result = await session.execute(select(ProductionLog).where(ProductionLog.id == log_id))
-    return result.scalars().first()
+async def get_production_log(session: AsyncSession, log_id: int) -> ProductionLog | None:
+    return await session.get(ProductionLog, log_id)
 
 
 async def get_production_logs(
@@ -25,7 +25,7 @@ async def get_production_logs(
     start_date: Optional[date] = None,
     end_date: Optional[date] = None,
     worker_id: Optional[int] = None,
-):
+) -> list[ProductionLog]:
     stmt = select(ProductionLog)
     if start_date:
         stmt = stmt.where(ProductionLog.production_date >= start_date)
@@ -33,13 +33,13 @@ async def get_production_logs(
         stmt = stmt.where(ProductionLog.production_date <= end_date)
     if worker_id:
         stmt = stmt.where(ProductionLog.worker_id == worker_id)
-    result = await session.execute(stmt.offset(skip).limit(limit))
+    stmt = stmt.order_by(desc(ProductionLog.production_date)).offset(skip).limit(limit)
+    result = await session.execute(stmt)
     return result.scalars().all()
 
 
-async def create_production_log(session: AsyncSession, log: ProductionLogCreate, created_by: int):
-    result = await session.execute(select(Product).where(Product.id == log.product_id))
-    product = result.scalars().first()
+async def create_production_log(session: AsyncSession, log: ProductionLogCreate, created_by: int) -> ProductionLog | None:
+    product = await session.get(Product, log.product_id)
     if not product:
         logger.warning("Production creation failed: invalid product_id", extra={"product_id": log.product_id})
         return None
@@ -52,14 +52,12 @@ async def create_production_log(session: AsyncSession, log: ProductionLogCreate,
     return db_log
 
 
-async def update_production_log(session: AsyncSession, log_id: int, log_update: ProductionLogUpdate):
-    result = await session.execute(select(ProductionLog).where(ProductionLog.id == log_id))
-    db_log = result.scalars().first()
+async def update_production_log(session: AsyncSession, log_id: int, log_update: ProductionLogUpdate) -> ProductionLog | None:
+    db_log = await session.get(ProductionLog, log_id)
     if db_log:
         update_data = log_update.model_dump(exclude_unset=True)
         if 'quantity' in update_data:
-            result_prod = await session.execute(select(Product).where(Product.id == db_log.product_id))
-            product = result_prod.scalars().first()
+            product = await session.get(Product, db_log.product_id)
             if product:
                 update_data['amount'] = update_data['quantity'] * product.unit_price
         for key, value in update_data.items():
@@ -70,9 +68,8 @@ async def update_production_log(session: AsyncSession, log_id: int, log_update: 
     return db_log
 
 
-async def approve_production_log(session: AsyncSession, log_id: int, approved_by: int):
-    result = await session.execute(select(ProductionLog).where(ProductionLog.id == log_id))
-    db_log = result.scalars().first()
+async def approve_production_log(session: AsyncSession, log_id: int, approved_by: int) -> ProductionLog | None:
+    db_log = await session.get(ProductionLog, log_id)
     if db_log:
         db_log.approved = True
         db_log.approved_by = approved_by

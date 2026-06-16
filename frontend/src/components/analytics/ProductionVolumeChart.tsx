@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { DailyPoint } from '@/hooks/useAnalytics';
-import { BarChart3 } from 'lucide-react';
 import { useMemo } from 'react';
 import {
   ResponsiveContainer,
@@ -30,9 +29,7 @@ export default function ProductionVolumeChart({ data, isLoading }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <BarChart3 className="h-4 w-4 text-purple-500" /> Daily Garment Production
-        </CardTitle>
+        <CardTitle className="text-sm font-medium">Daily Garment Production</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -53,7 +50,7 @@ export default function ProductionVolumeChart({ data, isLoading }: Props) {
                   fontSize: '13px',
                 }}
               />
-              <Bar dataKey="pieces" fill="#a855f7" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="pieces" fill="var(--primary)" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

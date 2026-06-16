@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface Worker {
@@ -26,6 +27,7 @@ export function useCreateWorker() {
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['workers'] }),
+    onError: (err: Error) => toast.error(err.message || 'Failed to create worker'),
   });
 }
 
@@ -37,6 +39,7 @@ export function useUpdateWorker() {
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['workers'] }),
+    onError: (err: Error) => toast.error(err.message || 'Failed to update worker'),
   });
 }
 
@@ -48,5 +51,6 @@ export function useDeleteWorker() {
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['workers'] }),
+    onError: (err: Error) => toast.error(err.message || 'Failed to delete worker'),
   });
 }

@@ -6,7 +6,7 @@ export default function Layout() {
     <div className="min-h-screen bg-background">
       <Sidebar />
       <main className="lg:ml-60 min-h-screen">
-        <div className="px-4 py-6 lg:pt-6">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 py-6 lg:py-8 animate-fade-in">
           <Outlet />
         </div>
       </main>

@@ -8,15 +8,10 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import SearchInput from '../ui/SearchInput';
 import Pagination from '../ui/Pagination';
-import EmptyState from '../ui/EmptyState';
-import { Shirt, Plus, Check, X } from 'lucide-react';
+import { Shirt, Plus, Check, X, Save } from 'lucide-react';
 import type { AxiosError } from 'axios';
 
 const pageSize = 8;
-
-function Skeletons({ n }: { n: number }) {
-  return <div className="space-y-2">{Array.from({ length: n }, (_, i) => <Skeleton key={i} className="h-14 w-full" />)}</div>;
-}
 
 export default function ProductsTab() {
   const { data: products, isLoading } = useProducts();
@@ -63,32 +58,52 @@ export default function ProductsTab() {
   };
 
   return (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader><CardTitle className="text-base flex items-center gap-2"><Plus className="h-4 w-4" /> Add Garment</CardTitle></CardHeader>
+    <div className="space-y-6">
+      <Card className="border-primary/20 bg-gradient-to-r from-primary/[0.02] to-transparent">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Plus className="h-4 w-4 text-primary" />
+            Add Garment
+          </CardTitle>
+        </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreate} className="flex flex-col sm:flex-row items-end gap-3">
-            <div className="space-y-1 flex-1">
-              <label className="text-sm font-medium">Name</label>
+          <form onSubmit={handleCreate} className="grid grid-cols-2 sm:flex sm:flex-row items-end gap-3">
+            <div className="space-y-1 col-span-2 sm:flex-1">
+              <label className="text-xs font-medium">Name</label>
               <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Wedding Dress" required />
             </div>
             <div className="space-y-1">
-              <label className="text-sm font-medium">Piece Rate (KES)</label>
-              <Input type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="500" required className="w-32" />
+              <label className="text-xs font-medium">Piece Rate (KES)</label>
+              <Input type="number" step="0.01" min="0" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="500" required className="w-full sm:w-32" />
             </div>
-            <Button type="submit" size="sm" disabled={createProduct.isPending}><Plus className="mr-1 h-4 w-4" /> Add</Button>
+            <Button type="submit" size="sm" disabled={createProduct.isPending}>
+              <Save className="mr-1 h-3.5 w-3.5" />
+              Add
+            </Button>
           </form>
         </CardContent>
       </Card>
 
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
-          <CardTitle className="text-base flex items-center gap-2"><Shirt className="h-4 w-4" /> Garments ({filtered.length})</CardTitle>
-          <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search..." />
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-4">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
+            <Shirt className="h-4 w-4 text-primary" />
+            Garments
+            <span className="text-xs font-normal text-muted-foreground">({filtered.length})</span>
+          </CardTitle>
+          <div className="w-full sm:w-48">
+            <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search..." />
+          </div>
         </CardHeader>
         <CardContent>
-          {isLoading ? <Skeletons n={4} /> : filtered.length === 0 ? (
-            <EmptyState icon={<Shirt className="h-12 w-12" />} title="No garments" description={search ? 'No match.' : 'Add one above.'} />
+          {isLoading ? (
+            <div className="space-y-2">{Array.from({ length: 4 }, (_, i) => <Skeleton key={i} className="h-12 w-full" />)}</div>
+          ) : filtered.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 text-center">
+              <Shirt className="h-8 w-8 text-muted-foreground mb-2" />
+              <p className="text-sm font-medium text-muted-foreground">{search ? 'No match found' : 'No garments yet'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{search ? 'Try a different term.' : 'Add one using the form above.'}</p>
+            </div>
           ) : (
             <div className="divide-y">
               {paged.map((p) => (
@@ -96,17 +111,20 @@ export default function ProductsTab() {
                   {editingId === p.id ? (
                     <>
                       <Input value={editName} onChange={(e) => setEditName(e.target.value)} className="flex-1" />
-                      <Input type="number" step="0.01" min="0" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} className="w-28" />
-                      <Button size="sm" variant="ghost" onClick={handleUpdate} disabled={updateProduct.isPending}><Check className="h-4 w-4" /></Button>
-                      <Button size="sm" variant="ghost" onClick={() => setEditingId(null)}><X className="h-4 w-4" /></Button>
+                      <Input type="number" step="0.01" min="0" value={editPrice} onChange={(e) => setEditPrice(e.target.value)} className="w-24" />
+                      <Button size="sm" variant="ghost" onClick={handleUpdate} disabled={updateProduct.isPending} aria-label="Save changes"><Check className="h-4 w-4" /></Button>
+                      <Button size="sm" variant="ghost" onClick={() => setEditingId(null)} aria-label="Cancel editing"><X className="h-4 w-4" /></Button>
                     </>
                   ) : (
                     <>
+                      <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/5 shrink-0">
+                        <Shirt className="h-3.5 w-3.5 text-primary" />
+                      </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-medium text-sm">{p.name}</p>
                         <p className="text-xs text-muted-foreground">{p.unit_price.toFixed(2)} KES / piece</p>
                       </div>
-                      <Badge variant={p.active ? 'default' : 'destructive'} className="text-xs">{p.active ? 'Active' : 'Inactive'}</Badge>
+                      <Badge variant={p.active ? 'default' : 'destructive'} className="text-[10px] h-5">{p.active ? 'Active' : 'Inactive'}</Badge>
                       <Button size="sm" variant="outline" onClick={() => { setEditingId(p.id); setEditName(p.name); setEditPrice(String(p.unit_price)); }}>Edit</Button>
                     </>
                   )}
@@ -114,7 +132,7 @@ export default function ProductsTab() {
               ))}
             </div>
           )}
-          {filtered.length > pageSize && <Pagination page={page} pageSize={pageSize} total={filtered.length} onChange={setPage} />}
+          {filtered.length > pageSize && <div className="mt-4"><Pagination page={page} pageSize={pageSize} total={filtered.length} onChange={setPage} /></div>}
         </CardContent>
       </Card>
     </div>

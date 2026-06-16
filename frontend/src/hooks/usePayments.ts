@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface MpesaTransaction {
@@ -41,6 +42,7 @@ export function useMpesaPay() {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
       qc.invalidateQueries({ queryKey: ['transactions'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'M-Pesa payment failed'),
   });
 }
 
@@ -57,6 +59,7 @@ export function useMpesaBulkPay() {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
       qc.invalidateQueries({ queryKey: ['transactions'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Bulk M-Pesa payment failed'),
   });
 }
 
@@ -100,6 +103,7 @@ export function useUpdateMpesaSettings() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['mpesa-settings'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to update M-Pesa settings'),
   });
 }
 
@@ -113,6 +117,7 @@ export function useMarkCashPaid() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to mark cash paid'),
   });
 }
 
@@ -128,6 +133,7 @@ export function useBulkMarkCashPaid() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Bulk cash payment failed'),
   });
 }
 
@@ -150,6 +156,7 @@ export function useUpdatePaymentMethod() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to update payment method'),
   });
 }
 
@@ -167,6 +174,7 @@ export function useMpesaPayAdvance() {
       qc.invalidateQueries({ queryKey: ['transactions'] });
       qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'M-Pesa advance payment failed'),
   });
 }
 
@@ -184,6 +192,7 @@ export function useMpesaBulkPayAdvances() {
       qc.invalidateQueries({ queryKey: ['transactions'] });
       qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Bulk M-Pesa advance payment failed'),
   });
 }
 
@@ -198,6 +207,7 @@ export function useMarkAdvanceCashPaid() {
       qc.invalidateQueries({ queryKey: ['advances'] });
       qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to mark advance cash paid'),
   });
 }
 
@@ -214,6 +224,7 @@ export function useBulkMarkAdvanceCashPaid() {
       qc.invalidateQueries({ queryKey: ['advances'] });
       qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Bulk cash advance payment failed'),
   });
 }
 
@@ -236,6 +247,7 @@ export function useUpdateAdvancePaymentMethod() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['advances'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to update payment method'),
   });
 }
 
@@ -258,5 +270,6 @@ export function useResetStuckPayment() {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
       qc.invalidateQueries({ queryKey: ['advances'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to reset payment'),
   });
 }

@@ -4,6 +4,7 @@ from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
+from sqlalchemy import desc
 
 from ..models import Advance
 from ..schemas import AdvanceCreate, AdvanceUpdate
@@ -11,9 +12,8 @@ from ..schemas import AdvanceCreate, AdvanceUpdate
 logger = logging.getLogger(__name__)
 
 
-async def get_advance(session: AsyncSession, advance_id: int):
-    result = await session.execute(select(Advance).where(Advance.id == advance_id))
-    return result.scalars().first()
+async def get_advance(session: AsyncSession, advance_id: int) -> Advance | None:
+    return await session.get(Advance, advance_id)
 
 
 async def get_advances(
@@ -24,7 +24,7 @@ async def get_advances(
     end_date: Optional[date] = None,
     payment_status: Optional[str] = None,
     worker_id: Optional[int] = None,
-):
+) -> list[Advance]:
     stmt = select(Advance)
     if start_date:
         stmt = stmt.where(Advance.advance_date >= start_date)
@@ -34,11 +34,12 @@ async def get_advances(
         stmt = stmt.where(Advance.payment_status == payment_status)
     if worker_id:
         stmt = stmt.where(Advance.worker_id == worker_id)
-    result = await session.execute(stmt.offset(skip).limit(limit))
+    stmt = stmt.order_by(desc(Advance.created_at)).offset(skip).limit(limit)
+    result = await session.execute(stmt)
     return result.scalars().all()
 
 
-async def create_advance(session: AsyncSession, advance: AdvanceCreate):
+async def create_advance(session: AsyncSession, advance: AdvanceCreate) -> Advance:
     db_advance = Advance(**advance.model_dump())
     session.add(db_advance)
     await session.commit()
@@ -46,9 +47,8 @@ async def create_advance(session: AsyncSession, advance: AdvanceCreate):
     return db_advance
 
 
-async def update_advance(session: AsyncSession, advance_id: int, advance_update: AdvanceUpdate):
-    result = await session.execute(select(Advance).where(Advance.id == advance_id))
-    db_advance = result.scalars().first()
+async def update_advance(session: AsyncSession, advance_id: int, advance_update: AdvanceUpdate) -> Advance | None:
+    db_advance = await session.get(Advance, advance_id)
     if db_advance:
         update_data = advance_update.model_dump(exclude_unset=True)
         for key, value in update_data.items():
@@ -58,9 +58,8 @@ async def update_advance(session: AsyncSession, advance_id: int, advance_update:
     return db_advance
 
 
-async def approve_advance(session: AsyncSession, advance_id: int, approved_by: int):
-    result = await session.execute(select(Advance).where(Advance.id == advance_id))
-    db_advance = result.scalars().first()
+async def approve_advance(session: AsyncSession, advance_id: int, approved_by: int) -> Advance | None:
+    db_advance = await session.get(Advance, advance_id)
     if db_advance:
         db_advance.approved = True
         db_advance.approved_by = approved_by
@@ -77,7 +76,7 @@ async def update_advance_payment_status(
     advance_id: int,
     status: str,
     paid_at: Optional[datetime] = None,
-):
+) -> Advance | None:
     advance = await session.get(Advance, advance_id)
     if not advance:
         logger.warning("Advance not found for status update", extra={"advance_id": advance_id})
@@ -91,7 +90,7 @@ async def update_advance_payment_status(
 
 async def update_advance_payment_method(
     session: AsyncSession, advance_id: int, payment_method: str
-):
+) -> Advance | None:
     advance = await session.get(Advance, advance_id)
     if not advance:
         logger.warning("Advance not found for method update", extra={"advance_id": advance_id})

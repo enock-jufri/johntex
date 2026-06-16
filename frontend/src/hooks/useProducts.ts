@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface Product {
@@ -10,12 +11,12 @@ export interface Product {
   active: boolean;
 }
 
-export function useProducts() {
+export function useProducts(activeOnly = true) {
   return useQuery({
-    queryKey: ['products'],
+    queryKey: ['products', activeOnly],
     queryFn: async () => {
-      const { data } = await api.get<Product[]>('/products/');
-      return data.filter((p) => p.active);
+      const { data } = await api.get<Product[]>(`/products/?active=${activeOnly}`);
+      return data;
     },
   });
 }
@@ -28,6 +29,7 @@ export function useCreateProduct() {
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+    onError: (err: Error) => toast.error(err.message || 'Failed to create product'),
   });
 }
 
@@ -39,5 +41,6 @@ export function useUpdateProduct() {
       return data;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+    onError: (err: Error) => toast.error(err.message || 'Failed to update product'),
   });
 }

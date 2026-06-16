@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { WorkerStat } from '@/hooks/useAnalytics';
-import { Users } from 'lucide-react';
 import { useMemo } from 'react';
 import {
   ResponsiveContainer,
@@ -11,10 +10,7 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Cell,
 } from 'recharts';
-
-const barColors = ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
 
 interface Props {
   data: WorkerStat[] | undefined;
@@ -28,7 +24,6 @@ export default function WorkerProductivityChart({ data, isLoading }: Props) {
       .map((w) => ({
         name: w.worker_name,
         revenue: w.total_revenue,
-        pieces: w.total_pieces,
       }))
       .slice(0, 10);
   }, [data]);
@@ -36,9 +31,7 @@ export default function WorkerProductivityChart({ data, isLoading }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <Users className="h-4 w-4 text-blue-500" /> Tailor Productivity
-        </CardTitle>
+        <CardTitle className="text-sm font-medium">Tailor Productivity</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -66,11 +59,7 @@ export default function WorkerProductivityChart({ data, isLoading }: Props) {
                   fontSize: '13px',
                 }}
               />
-              <Bar dataKey="revenue" radius={[0, 4, 4, 0]}>
-                {chartData.map((_, i) => (
-                  <Cell key={i} fill={barColors[i % barColors.length]} />
-                ))}
-              </Bar>
+              <Bar dataKey="revenue" fill="var(--primary)" radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         )}

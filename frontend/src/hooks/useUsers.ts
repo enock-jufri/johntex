@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface User {
@@ -87,6 +88,7 @@ export function useCreateUser() {
       qc.invalidateQueries({ queryKey: ['users'] });
       qc.invalidateQueries({ queryKey: ['user-activity'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to create user'),
   });
 }
 
@@ -101,6 +103,7 @@ export function useToggleUserActive() {
       qc.invalidateQueries({ queryKey: ['users'] });
       qc.invalidateQueries({ queryKey: ['user-activity'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to toggle user'),
   });
 }
 
@@ -115,12 +118,13 @@ export function useResetPassword() {
       password: string;
     }) => {
       const { data } = await api.put(
-        `/users/${userId}/reset-password?password=${encodeURIComponent(password)}`
+        `/users/${userId}/reset-password`, { password }
       );
       return data;
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['user-activity'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to reset password'),
   });
 }

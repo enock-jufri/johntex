@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -12,17 +12,17 @@ from ..schemas import WorkerCreate, WorkerUpdate
 logger = logging.getLogger(__name__)
 
 
-async def get_worker(session: AsyncSession, worker_id: int):
+async def get_worker(session: AsyncSession, worker_id: int) -> Worker | None:
     result = await session.execute(select(Worker).where(Worker.id == worker_id))
     return result.scalars().first()
 
 
-async def get_workers(session: AsyncSession, skip: int = 0, limit: int = 100):
-    result = await session.execute(select(Worker).offset(skip).limit(limit))
+async def get_workers(session: AsyncSession, skip: int = 0, limit: int = 100) -> list[Worker]:
+    result = await session.execute(select(Worker).offset(skip).limit(limit).order_by(Worker.name))
     return result.scalars().all()
 
 
-async def create_worker(session: AsyncSession, worker: WorkerCreate, created_by: int):
+async def create_worker(session: AsyncSession, worker: WorkerCreate, created_by: int) -> Worker:
     db_worker = Worker(**worker.model_dump(), created_by=created_by)
     session.add(db_worker)
     await session.commit()
@@ -30,7 +30,7 @@ async def create_worker(session: AsyncSession, worker: WorkerCreate, created_by:
     return db_worker
 
 
-async def update_worker(session: AsyncSession, worker_id: int, worker_update: WorkerUpdate, updated_by: int):
+async def update_worker(session: AsyncSession, worker_id: int, worker_update: WorkerUpdate, updated_by: int) -> Worker | None:
     result = await session.execute(select(Worker).where(Worker.id == worker_id))
     db_worker = result.scalars().first()
     if db_worker:
@@ -44,7 +44,7 @@ async def update_worker(session: AsyncSession, worker_id: int, worker_update: Wo
     return db_worker
 
 
-async def deactivate_worker(session: AsyncSession, worker_id: int, updated_by: int):
+async def deactivate_worker(session: AsyncSession, worker_id: int, updated_by: int) -> Worker | None:
     result = await session.execute(select(Worker).where(Worker.id == worker_id))
     db_worker = result.scalars().first()
     if db_worker:
@@ -59,7 +59,7 @@ async def deactivate_worker(session: AsyncSession, worker_id: int, updated_by: i
     return db_worker
 
 
-async def delete_worker(session: AsyncSession, worker_id: int):
+async def delete_worker(session: AsyncSession, worker_id: int) -> Worker | None:
     result = await session.execute(select(Worker).where(Worker.id == worker_id))
     db_worker = result.scalars().first()
     if db_worker:

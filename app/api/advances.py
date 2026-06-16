@@ -20,7 +20,7 @@ router = APIRouter(prefix="/advances", tags=["advances"])
 @router.get("/", response_model=List[AdvanceRead])
 async def read_advances(
     skip: int = 0,
-    limit: int = 10000,
+    limit: int = 1000,
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),
     payment_status: Optional[str] = Query(None),

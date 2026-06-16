@@ -32,7 +32,6 @@ import {
   Plus,
   Check,
   X,
-  Settings2,
   Clock,
   AlertTriangle,
   Lock,
@@ -294,22 +293,22 @@ export default function UsersTab() {
           <CardTitle className="text-base flex items-center gap-2"><UserPlus className="h-4 w-4" /> Add User</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleCreate} className="flex flex-col sm:flex-row items-end gap-3">
-            <div className="space-y-1 flex-1">
+          <form onSubmit={handleCreate} className="grid grid-cols-2 sm:flex sm:flex-row items-end gap-3">
+            <div className="space-y-1 col-span-2 sm:flex-1">
               <label className="text-sm font-medium">Username</label>
               <Input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="e.g. john" required autoComplete="off" />
             </div>
-            <div className="space-y-1">
+            <div className="space-y-1 col-span-2">
               <label className="text-sm font-medium">Password</label>
               <div className="relative">
-                <Input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min. 6 chars" required className="w-44 pr-8" autoComplete="new-password" />
+                <Input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Min. 6 chars" required className="w-full sm:w-44 pr-8" autoComplete="new-password" />
                 <button type="button" className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground" onClick={() => setShowPassword(!showPassword)}>
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
             {password && (
-              <div className="space-y-1 self-end mb-1">
+              <div className="space-y-1 col-span-2">
                 <div className="flex gap-1">
                   {[1, 2, 3, 4].map((level) => (
                     <div key={level} className={`h-1 w-8 rounded-full transition-colors ${level <= strength.score ? strength.color : 'bg-gray-200 dark:bg-gray-700'}`} />
@@ -321,7 +320,7 @@ export default function UsersTab() {
             <div className="space-y-1">
               <label className="text-sm font-medium">Role</label>
               <Select value={roleId} onValueChange={(v) => setRoleId(v || '')}>
-                <SelectTrigger className="w-32"><SelectValue placeholder="Role..." /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-32"><SelectValue placeholder="Role..." /></SelectTrigger>
                 <SelectContent>
                   {(roles ?? []).map((r) => <SelectItem key={r.id} value={String(r.id)}>{r.name}</SelectItem>)}
                 </SelectContent>
@@ -346,7 +345,7 @@ export default function UsersTab() {
 
       {/* User List */}
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-4">
+        <CardHeader className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-4">
           <CardTitle className="text-base flex items-center gap-2"><Shield className="h-4 w-4" /> Users ({filtered.length})</CardTitle>
           <SearchInput value={search} onChange={(v) => { setSearch(v); setPage(1); }} placeholder="Search users..." />
         </CardHeader>
@@ -362,34 +361,34 @@ export default function UsersTab() {
 
                 return (
                   <div key={u.id} className={`py-3 transition-colors ${isExpanded ? 'bg-muted/30 -mx-4 px-4 rounded-lg' : ''}`}>
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-wrap">
                       <div className={`relative flex items-center justify-center h-9 w-9 rounded-full flex-shrink-0 ${u.active ? 'bg-emerald-100 dark:bg-emerald-900/40' : 'bg-red-100 dark:bg-red-900/40'}`}>
-                        <UserIcon className={`h-4 w-4 ${u.active ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500'}`} />
+                        <UserIcon className={`h-4 w-4 ${u.active ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500 dark:text-red-400'}`} />
                         <span className={`absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full border-2 border-background flex items-center justify-center ${role === 'admin' ? 'bg-purple-500' : role === 'supervisor' ? 'bg-blue-500' : 'bg-gray-400'}`} title={role}>
                           <Key className="h-2 w-2 text-white" />
                         </span>
                       </div>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 flex-wrap">
                           <p className="font-medium text-sm">{u.username}</p>
                           <Badge variant={u.active ? 'default' : 'destructive'} className="text-xs">{u.active ? 'Active' : 'Inactive'}</Badge>
                           <Badge variant="secondary" className="text-xs capitalize">{role}</Badge>
                         </div>
-                        <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
-                          <span className="flex items-center gap-1"><Clock className="h-3 w-3" />Last login: {timeAgo(activity?.last_login || u.last_login)}</span>
-                          {activity && <span className="flex items-center gap-1"><Zap className="h-3 w-3" />{activity.total_actions} actions</span>}
-                          <span className="flex items-center gap-1"><History className="h-3 w-3" />Created {timeAgo(u.created_at)}</span>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 mt-0.5 text-xs text-muted-foreground">
+                          <span className="flex items-center gap-1 whitespace-nowrap"><Clock className="h-3 w-3 shrink-0" />{timeAgo(activity?.last_login || u.last_login)}</span>
+                          {activity && <span className="flex items-center gap-1 whitespace-nowrap"><Zap className="h-3 w-3 shrink-0" />{activity.total_actions}</span>}
+                          <span className="flex items-center gap-1 whitespace-nowrap"><History className="h-3 w-3 shrink-0" />{timeAgo(u.created_at)}</span>
                         </div>
                       </div>
 
                       <div className="flex items-center gap-1">
-                        <Button size="sm" variant="ghost" onClick={() => setExpandedUser(isExpanded ? null : u.id)}>{isExpanded ? 'Less' : 'Details'}</Button>
-                        <Button size="sm" variant="ghost" onClick={() => { setResetTarget(u.id); setNewPassword(''); setShowResetPassword(false); }}>
-                          <RefreshCw className="h-3.5 w-3.5 mr-1" />Reset PW
+                        <Button size="sm" variant="ghost" onClick={() => setExpandedUser(isExpanded ? null : u.id)} className="text-xs">{isExpanded ? 'Less' : 'Details'}</Button>
+                        <Button size="sm" variant="ghost" onClick={() => { setResetTarget(u.id); setNewPassword(''); setShowResetPassword(false); }} className="text-xs">
+                          <RefreshCw className="h-3.5 w-3.5 sm:mr-1" /><span className="hidden sm:inline">Reset PW</span>
                         </Button>
-                        <Button size="sm" variant={u.active ? 'destructive' : 'default'} onClick={() => setConfirmTarget(u.id)}>
-                          {u.active ? <><UserX className="h-3.5 w-3.5 mr-1" />Deactivate</> : <><UserCheck className="h-3.5 w-3.5 mr-1" />Activate</>}
+                        <Button size="sm" variant={u.active ? 'destructive' : 'default'} onClick={() => setConfirmTarget(u.id)} className="text-xs">
+                          {u.active ? <><UserX className="h-3.5 w-3.5 sm:mr-1" /><span className="hidden sm:inline">Deactivate</span></> : <><UserCheck className="h-3.5 w-3.5 sm:mr-1" /><span className="hidden sm:inline">Activate</span></>}
                         </Button>
                       </div>
                     </div>

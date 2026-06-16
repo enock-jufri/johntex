@@ -22,7 +22,7 @@ export default function Pagination({ page, pageSize, total, onChange }: Paginati
   }
 
   return (
-    <div className="flex items-center justify-between gap-4 mt-4">
+    <div className="flex items-center justify-between gap-4 mt-4 flex-wrap">
       <p className="text-sm text-muted-foreground">
         {(page - 1) * pageSize + 1}–{Math.min(page * pageSize, total)} of {total}
       </p>

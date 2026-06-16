@@ -1,16 +1,18 @@
+"""Payroll endpoints — thin route handlers delegating to services.
+"""
+
 import logging
-import time
 from datetime import date
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from ..crud import audit as crud_audit
 from ..crud import payroll as crud_payroll
 from ..database import get_session
 from ..schemas import PayrollRead
 from ..security import get_current_admin, get_current_clerk
+from ..services.payroll_service import run_payroll
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +25,7 @@ async def read_payrolls(
     limit: int = 100,
     worker_id: Optional[int] = Query(None),
     session: AsyncSession = Depends(get_session),
-    current_user=Depends(get_current_clerk)
+    current_user=Depends(get_current_clerk),
 ):
     return await crud_payroll.get_payrolls(session, skip=skip, limit=limit, worker_id=worker_id)
 
@@ -33,11 +35,12 @@ async def run_payroll_for_week(
     week_start: date,
     payment_method: str = Query("cash", pattern="^(cash|mpesa)$"),
     session: AsyncSession = Depends(get_session),
-    current_user=Depends(get_current_admin)
+    current_user=Depends(get_current_admin),
 ):
+    import time
     t0 = time.monotonic()
-    await crud_audit.log_action(session, current_user.id, "payroll_run", f"Payroll processed for week starting {week_start}")
-    payrolls = await crud_payroll.run_payroll(session, week_start, payment_method=payment_method)
+    payrolls = await run_payroll(session, week_start, payment_method=payment_method, current_user_id=current_user.id)
+    await session.commit()
     duration = round((time.monotonic() - t0) * 1000, 2)
     logger.info(
         "Payroll run completed",

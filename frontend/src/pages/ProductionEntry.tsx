@@ -116,7 +116,7 @@ export default function ProductionEntry() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
         {[
           { label: 'Revenue', value: `${stats.revenue.toLocaleString()} KES`, icon: <DollarSign className="h-4 w-4 text-blue-500" /> },
           { label: 'Pieces', value: stats.pieces, icon: <Scissors className="h-4 w-4 text-green-500" /> },
@@ -142,8 +142,8 @@ export default function ProductionEntry() {
           <CardTitle className="text-base flex items-center gap-2"><Plus className="h-4 w-4" /> New Production Entry</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-end gap-3">
-            <div className="space-y-1 flex-1">
+          <form onSubmit={handleSubmit} className="grid grid-cols-2 sm:flex sm:flex-row items-end gap-3">
+            <div className="space-y-1 col-span-2 sm:flex-1">
               <label className="text-sm font-medium">Worker</label>
               <Select value={workerId} onValueChange={(v) => setWorkerId(v || '')}>
                 <SelectTrigger className={formErrors.workerId ? 'border-destructive' : ''}>
@@ -158,7 +158,7 @@ export default function ProductionEntry() {
               {formErrors.workerId && <p className="text-xs text-destructive">{formErrors.workerId}</p>}
             </div>
 
-            <div className="space-y-1 flex-1">
+            <div className="space-y-1 col-span-2 sm:flex-1">
               <label className="text-sm font-medium">Product</label>
               <Select value={productId} onValueChange={(v) => setProductId(v || '')}>
                 <SelectTrigger className={formErrors.productId ? 'border-destructive' : ''}>
@@ -175,18 +175,18 @@ export default function ProductionEntry() {
 
             <div className="space-y-1">
               <label className="text-sm font-medium">Date</label>
-              <Input type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="w-36" />
+              <Input type="date" value={entryDate} onChange={(e) => setEntryDate(e.target.value)} className="w-full sm:w-36" />
             </div>
 
             <div className="space-y-1">
               <label className="text-sm font-medium">Quantity</label>
-              <Input type="number" min="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} className={`w-24 ${formErrors.quantity ? 'border-destructive' : ''}`} />
+              <Input type="number" min="1" value={quantity} onChange={(e) => setQuantity(e.target.value)} className={`w-full sm:w-24 ${formErrors.quantity ? 'border-destructive' : ''}`} />
               {formErrors.quantity && <p className="text-xs text-destructive">{formErrors.quantity}</p>}
             </div>
 
             <div className="space-y-1">
               <label className="text-sm font-medium">Notes</label>
-              <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional" className="w-32" />
+              <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Optional" className="w-full sm:w-32" />
             </div>
 
             <div className="flex items-end gap-3">

@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface Advance {
@@ -60,6 +61,7 @@ export function useCreateAdvance() {
       qc.invalidateQueries({ queryKey: ['advances'] });
       qc.invalidateQueries({ queryKey: ['wallet', variables.worker_id] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to create advance'),
   });
 }
 
@@ -72,6 +74,8 @@ export function useApproveAdvance() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['advances'] });
+      qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to approve advance'),
   });
 }

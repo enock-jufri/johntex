@@ -75,7 +75,7 @@ export default function WorkerEarningsChart({ wallet, isLoading }: Props) {
         )}
         {wallet && (
           <p className="text-center text-sm font-bold mt-2">
-            Balance: <span className={wallet.balance >= 0 ? 'text-amber-600' : 'text-red-600'}>
+            Balance: <span className={wallet.balance >= 0 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400'}>
               {wallet.balance.toLocaleString()} KES
             </span>
           </p>

@@ -11,7 +11,7 @@ async def log_action(
     ip_address: Optional[str] = None,
     user_agent: Optional[str] = None,
     location: Optional[str] = None,
-):
+) -> None:
     entry = AuditLog(
         user_id=user_id,
         action=action,
@@ -21,3 +21,4 @@ async def log_action(
         location=location,
     )
     session.add(entry)
+    await session.flush()

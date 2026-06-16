@@ -100,7 +100,7 @@ export default function WorkersPage() {
       </div>
 
       {/* Summary banner */}
-      <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
         {[
           { label: 'Total Workers', value: totals.total, icon: <Users className="h-4 w-4 text-blue-500" /> },
           { label: 'Active', value: totals.active, icon: <span className="block h-2.5 w-2.5 rounded-full bg-emerald-500" /> },
@@ -108,13 +108,15 @@ export default function WorkersPage() {
           { label: 'Total Earned', value: `${totals.earned.toLocaleString()} KES`, icon: <TrendingUp className="h-4 w-4 text-emerald-500" /> },
           { label: 'Total Pieces', value: totals.pieces.toLocaleString(), icon: <Scissors className="h-4 w-4 text-green-500" /> },
         ].map((s) => (
-          <div key={s.label} className="flex items-center gap-3 p-3 rounded-xl bg-muted/50">
-            <div className="flex-shrink-0">{s.icon}</div>
-            <div>
-              <p className="text-xs text-muted-foreground">{s.label}</p>
+          <Card key={s.label} className="transition hover:shadow-md">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between mb-1">
+                <span className="text-xs text-muted-foreground">{s.label}</span>
+                {s.icon}
+              </div>
               <p className="text-lg font-bold">{s.value}</p>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
@@ -151,7 +153,7 @@ export default function WorkersPage() {
                           <Phone className="h-3 w-3 flex-shrink-0" />
                           {formatPhoneDisplay(w.phone)}
                         </p>
-                        <Badge variant={w.active ? 'default' : 'destructive'} className="mt-1.5 text-xs">
+                        <Badge variant="outline" className="mt-1.5 text-xs text-muted-foreground">
                           {w.active ? 'Active' : 'Inactive'}
                         </Badge>
                       </div>

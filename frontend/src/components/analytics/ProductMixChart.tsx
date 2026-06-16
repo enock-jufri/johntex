@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { ProductStat } from '@/hooks/useAnalytics';
-import { Scissors } from 'lucide-react';
 import { useMemo } from 'react';
 import {
   ResponsiveContainer,
@@ -9,10 +8,7 @@ import {
   Pie,
   Cell,
   Tooltip,
-  Legend,
 } from 'recharts';
-
-const donutColors = ['#3b82f6', '#22c55e', '#a855f7', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#84cc16'];
 
 interface Props {
   data: ProductStat[] | undefined;
@@ -25,17 +21,13 @@ export default function ProductMixChart({ data, isLoading }: Props) {
     return data.slice(0, 8).map((p) => ({
       name: p.product_name,
       value: p.total_revenue,
-      pieces: p.total_pieces,
-      pct: p.percentage,
     }));
   }, [data]);
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <Scissors className="h-4 w-4 text-green-500" /> Garment Revenue Mix
-        </CardTitle>
+        <CardTitle className="text-sm font-medium">Garment Revenue Mix</CardTitle>
       </CardHeader>
       <CardContent>
         {isLoading ? (
@@ -51,11 +43,11 @@ export default function ProductMixChart({ data, isLoading }: Props) {
                 cy="50%"
                 innerRadius={60}
                 outerRadius={100}
-                paddingAngle={2}
+                paddingAngle={1}
                 dataKey="value"
               >
                 {chartData.map((_, i) => (
-                  <Cell key={i} fill={donutColors[i % donutColors.length]} />
+                  <Cell key={i} fill="var(--primary)" opacity={1 - i * 0.1} />
                 ))}
               </Pie>
               <Tooltip
@@ -66,9 +58,6 @@ export default function ProductMixChart({ data, isLoading }: Props) {
                   borderRadius: '8px',
                   fontSize: '13px',
                 }}
-              />
-              <Legend
-                formatter={(value: string) => <span className="text-sm text-foreground">{value}</span>}
               />
             </PieChart>
           </ResponsiveContainer>

@@ -11,7 +11,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
 } from 'recharts';
 
 interface Props {
@@ -32,8 +31,8 @@ export default function RevenueTrendChart({ data, isLoading }: Props) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-base">
-          <TrendingUp className="h-4 w-4 text-blue-500" /> Revenue & Garment Production
+        <CardTitle className="flex items-center gap-2 text-sm font-medium">
+          <TrendingUp className="h-4 w-4 text-muted-foreground" /> Revenue &amp; Garment Production
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -46,18 +45,13 @@ export default function RevenueTrendChart({ data, isLoading }: Props) {
             <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -20, bottom: 0 }}>
               <defs>
                 <linearGradient id="revenueFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--color-blue-500, #3b82f6)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="var(--color-blue-500, #3b82f6)" stopOpacity={0} />
-                </linearGradient>
-                <linearGradient id="piecesFill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="5%" stopColor="var(--color-green-500, #22c55e)" stopOpacity={0.3} />
-                  <stop offset="95%" stopColor="var(--color-green-500, #22c55e)" stopOpacity={0} />
+                  <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.25} />
+                  <stop offset="95%" stopColor="var(--primary)" stopOpacity={0} />
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
               <XAxis dataKey="date" tick={{ fontSize: 11 }} className="text-muted-foreground" />
-              <YAxis yAxisId="left" tick={{ fontSize: 11 }} className="text-muted-foreground" />
-              <YAxis yAxisId="right" orientation="right" tick={{ fontSize: 11 }} className="text-muted-foreground" />
+              <YAxis tick={{ fontSize: 11 }} className="text-muted-foreground" />
               <Tooltip
                 contentStyle={{
                   backgroundColor: 'var(--color-popover, #fff)',
@@ -66,23 +60,12 @@ export default function RevenueTrendChart({ data, isLoading }: Props) {
                   fontSize: '13px',
                 }}
               />
-              <Legend />
               <Area
-                yAxisId="left"
                 type="monotone"
                 dataKey="revenue"
                 name="Revenue (KES)"
-                stroke="#3b82f6"
+                stroke="var(--primary)"
                 fill="url(#revenueFill)"
-                strokeWidth={2}
-              />
-              <Area
-                yAxisId="right"
-                type="monotone"
-                dataKey="pieces"
-                name="Garments"
-                stroke="#22c55e"
-                fill="url(#piecesFill)"
                 strokeWidth={2}
               />
             </AreaChart>

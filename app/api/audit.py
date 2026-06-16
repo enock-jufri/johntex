@@ -20,7 +20,7 @@ router = APIRouter(prefix="/audit", tags=["audit"])
 @router.get("/", response_model=List[AuditLogRead])
 async def read_audit_logs(
     skip: int = 0,
-    limit: int = 10000,
+    limit: int = 1000,
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),
     action: Optional[str] = Query(None),

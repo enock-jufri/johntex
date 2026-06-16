@@ -1,5 +1,5 @@
 import logging
-from datetime import datetime
+from typing import Optional
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -12,17 +12,20 @@ from ..schemas import ProductCreate, ProductUpdate
 logger = logging.getLogger(__name__)
 
 
-async def get_product(session: AsyncSession, product_id: int):
+async def get_product(session: AsyncSession, product_id: int) -> Product | None:
     result = await session.execute(select(Product).where(Product.id == product_id))
     return result.scalars().first()
 
 
-async def get_products(session: AsyncSession, skip: int = 0, limit: int = 100):
-    result = await session.execute(select(Product).offset(skip).limit(limit))
+async def get_products(session: AsyncSession, skip: int = 0, limit: int = 100, active_only: bool = False) -> list[Product]:
+    stmt = select(Product)
+    if active_only:
+        stmt = stmt.where(Product.active == True)
+    result = await session.execute(stmt.offset(skip).limit(limit).order_by(Product.name))
     return result.scalars().all()
 
 
-async def create_product(session: AsyncSession, product: ProductCreate, created_by: int):
+async def create_product(session: AsyncSession, product: ProductCreate, created_by: int) -> Product:
     db_product = Product(**product.model_dump(), created_by=created_by)
     session.add(db_product)
     await session.commit()
@@ -30,7 +33,7 @@ async def create_product(session: AsyncSession, product: ProductCreate, created_
     return db_product
 
 
-async def update_product(session: AsyncSession, product_id: int, product_update: ProductUpdate, updated_by: int):
+async def update_product(session: AsyncSession, product_id: int, product_update: ProductUpdate, updated_by: int) -> Product | None:
     result = await session.execute(select(Product).where(Product.id == product_id))
     db_product = result.scalars().first()
     if db_product:
@@ -44,7 +47,7 @@ async def update_product(session: AsyncSession, product_id: int, product_update:
     return db_product
 
 
-async def delete_product(session: AsyncSession, product_id: int):
+async def delete_product(session: AsyncSession, product_id: int) -> Product | None:
     result = await session.execute(select(Product).where(Product.id == product_id))
     db_product = result.scalars().first()
     if db_product:

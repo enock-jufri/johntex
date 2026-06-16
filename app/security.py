@@ -16,7 +16,12 @@ from .schemas import TokenData
 
 logger = logging.getLogger(__name__)
 
-SECRET_KEY = os.getenv("SECRET_KEY", "change-me-in-production")
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if os.getenv("ENVIRONMENT", "development") == "production":
+        raise RuntimeError("SECRET_KEY environment variable is required in production")
+    SECRET_KEY = "change-me-in-production"
+    logger.warning("SECRET_KEY not set — using default, which is UNSAFE for production")
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
 

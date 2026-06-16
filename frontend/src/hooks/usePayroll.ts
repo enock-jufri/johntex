@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface Payroll {
@@ -52,5 +53,6 @@ export function useRunPayroll() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['payrolls'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Payroll run failed'),
   });
 }

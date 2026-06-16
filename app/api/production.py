@@ -20,7 +20,7 @@ router = APIRouter(prefix="/production", tags=["production"])
 @router.get("/", response_model=List[ProductionLogRead])
 async def read_production_logs(
     skip: int = 0,
-    limit: int = 10000,
+    limit: int = 1000,
     start_date: Optional[date] = Query(None),
     end_date: Optional[date] = Query(None),
     worker_id: Optional[int] = Query(None),

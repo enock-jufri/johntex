@@ -71,7 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(access_token);
 
     const payload = JSON.parse(atob(access_token.split('.')[1]));
-    const userData: User = { id: 0, username: payload.sub, role: payload.role || 'supervisor' };
+    const userData: User = { id: payload.user_id ?? 0, username: payload.sub, role: payload.role || 'supervisor' };
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   }, []);

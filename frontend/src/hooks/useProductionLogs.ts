@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import toast from 'react-hot-toast';
 import api from '../api/client';
 
 export interface ProductionLog {
@@ -46,6 +47,7 @@ export function useCreateProductionLog() {
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['productionLogs'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to create production entry'),
   });
 }
 
@@ -58,6 +60,8 @@ export function useApproveProductionLog() {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['productionLogs'] });
+      qc.invalidateQueries({ queryKey: ['wallet'] });
     },
+    onError: (err: Error) => toast.error(err.message || 'Failed to approve production entry'),
   });
 }

@@ -1,8 +1,7 @@
 import logging
-from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import select
+from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.timezone import eat_now
@@ -34,7 +33,7 @@ async def create_transaction(
 
 async def update_transaction(
     session: AsyncSession, transaction_id: int, updates: dict
-) -> Optional[MpesaTransaction]:
+) -> MpesaTransaction | None:
     txn = await session.get(MpesaTransaction, transaction_id)
     if not txn:
         logger.warning("Transaction not found for update", extra={"transaction_id": transaction_id})
@@ -50,7 +49,7 @@ async def update_transaction(
 
 async def get_transaction(
     session: AsyncSession, transaction_id: int
-) -> Optional[MpesaTransaction]:
+) -> MpesaTransaction | None:
     return await session.get(MpesaTransaction, transaction_id)
 
 
@@ -63,7 +62,7 @@ async def get_transactions(
     stmt = select(MpesaTransaction).offset(skip).limit(limit)
     if payroll_id is not None:
         stmt = stmt.where(MpesaTransaction.payroll_id == payroll_id)
-    stmt = stmt.order_by(MpesaTransaction.created_at.desc())
+    stmt = stmt.order_by(desc(MpesaTransaction.created_at))
     result = await session.execute(stmt)
     return result.scalars().all()
 
@@ -72,8 +71,8 @@ async def get_latest_transaction(
     session: AsyncSession,
     payroll_id: Optional[int] = None,
     advance_id: Optional[int] = None,
-) -> Optional[MpesaTransaction]:
-    stmt = select(MpesaTransaction).order_by(MpesaTransaction.created_at.desc()).limit(1)
+) -> MpesaTransaction | None:
+    stmt = select(MpesaTransaction).order_by(desc(MpesaTransaction.created_at)).limit(1)
     if payroll_id is not None:
         stmt = stmt.where(MpesaTransaction.payroll_id == payroll_id)
     if advance_id is not None:

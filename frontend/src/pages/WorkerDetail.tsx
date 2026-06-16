@@ -140,8 +140,8 @@ export default function WorkerDetail() {
         </div>
       </div>
 
-      {/* Stat Chips */}
-      <div className="flex flex-wrap gap-3">
+      {/* Stat Cards */}
+      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
         {(() => {
           const totalPaidOut = (wallet?.total_advanced ?? 0) + (wallet?.total_paid ?? 0);
           return [
@@ -151,7 +151,7 @@ export default function WorkerDetail() {
             { label: 'Wallet Balance', value: `${(wallet?.balance ?? 0).toLocaleString()} KES`, icon: <Wallet className="h-4 w-4" />, color: (wallet?.balance ?? 0) >= 0 ? 'text-amber-600 dark:text-amber-400' : 'text-red-600 dark:text-red-400', bg: (wallet?.balance ?? 0) >= 0 ? 'bg-amber-50 dark:bg-amber-950/30' : 'bg-red-50 dark:bg-red-950/30' },
           ];
         })().map((s) => (
-          <div key={s.label} className={`flex items-center gap-2.5 px-4 py-2.5 rounded-xl ${s.bg}`}>
+          <div key={s.label} className={`flex items-center gap-3 p-4 rounded-xl ${s.bg}`}>
             <span className={s.color}>{s.icon}</span>
             <div>
               <p className="text-xs text-muted-foreground">{s.label}</p>
@@ -206,18 +206,18 @@ export default function WorkerDetail() {
             <EmptyState icon={<Scissors className="h-12 w-12" />} title="No production" description="No production entries yet." />
           ) : (
             <>
-              <div className="grid gap-3 grid-cols-2 lg:grid-cols-4 mb-4">
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-4">
                 {[
-                  { label: 'Total Value', value: `${logStats.total.toLocaleString()} KES`, icon: <DollarSign className="h-4 w-4 text-blue-500" /> },
-                  { label: 'Total Pieces', value: logStats.pieces, icon: <Scissors className="h-4 w-4 text-green-500" /> },
-                  { label: 'Approved', value: `${logStats.approved}/${sortedLogs.length}`, icon: <CheckCircle className="h-4 w-4 text-emerald-500" /> },
-                  { label: 'Approval Rate', value: `${logStats.rate}%`, icon: <TrendingUp className="h-4 w-4 text-purple-500" /> },
+                  { label: 'Total Value', value: `${logStats.total.toLocaleString()} KES`, icon: <DollarSign className="h-4 w-4" />, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/30' },
+                  { label: 'Total Pieces', value: logStats.pieces, icon: <Scissors className="h-4 w-4" />, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
+                  { label: 'Approved', value: `${logStats.approved}/${sortedLogs.length}`, icon: <CheckCircle className="h-4 w-4" />, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
+                  { label: 'Approval Rate', value: `${logStats.rate}%`, icon: <TrendingUp className="h-4 w-4" />, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/30' },
                 ].map((s) => (
-                  <div key={s.label} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                    <div className="mt-0.5 flex-shrink-0">{s.icon}</div>
+                  <div key={s.label} className={`flex items-center gap-3 p-4 rounded-xl ${s.bg}`}>
+                    <span className={s.color}>{s.icon}</span>
                     <div>
                       <p className="text-xs text-muted-foreground">{s.label}</p>
-                      <p className="text-lg font-bold">{s.value}</p>
+                      <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
                     </div>
                   </div>
                 ))}
@@ -257,18 +257,18 @@ export default function WorkerDetail() {
             <EmptyState icon={<DollarSign className="h-12 w-12" />} title="No advances" description="No advance requests yet." />
           ) : (
             <>
-              <div className="grid gap-3 grid-cols-2 lg:grid-cols-4 mb-4">
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-4">
                 {[
-                  { label: 'Total Advanced', value: `${advanceStats.total.toLocaleString()} KES`, icon: <ArrowDownRight className="h-4 w-4 text-red-500" /> },
-                  { label: 'Total Count', value: advanceStats.count, icon: <DollarSign className="h-4 w-4 text-blue-500" /> },
-                  { label: 'Pending', value: advanceStats.pending, icon: <AlertCircle className="h-4 w-4 text-amber-500" /> },
-                  { label: 'Processing', value: advanceStats.processing, icon: <TrendingDown className="h-4 w-4 text-purple-500" /> },
+                  { label: 'Total Advanced', value: `${advanceStats.total.toLocaleString()} KES`, icon: <ArrowDownRight className="h-4 w-4" />, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-950/30' },
+                  { label: 'Total Count', value: advanceStats.count, icon: <DollarSign className="h-4 w-4" />, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/30' },
+                  { label: 'Pending', value: advanceStats.pending, icon: <AlertCircle className="h-4 w-4" />, color: 'text-amber-600 dark:text-amber-400', bg: 'bg-amber-50 dark:bg-amber-950/30' },
+                  { label: 'Processing', value: advanceStats.processing, icon: <TrendingDown className="h-4 w-4" />, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/30' },
                 ].map((s) => (
-                  <div key={s.label} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                    <div className="mt-0.5 flex-shrink-0">{s.icon}</div>
+                  <div key={s.label} className={`flex items-center gap-3 p-4 rounded-xl ${s.bg}`}>
+                    <span className={s.color}>{s.icon}</span>
                     <div>
                       <p className="text-xs text-muted-foreground">{s.label}</p>
-                      <p className="text-lg font-bold">{s.value}</p>
+                      <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
                     </div>
                   </div>
                 ))}
@@ -308,18 +308,18 @@ export default function WorkerDetail() {
             <EmptyState icon={<Calendar className="h-12 w-12" />} title="No payroll" description="No payroll runs yet." />
           ) : (
             <>
-              <div className="grid gap-3 grid-cols-2 lg:grid-cols-4 mb-4">
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4 mb-4">
                 {[
-                  { label: 'Total Gross', value: `${payrollStats.gross.toLocaleString()} KES`, icon: <TrendingUp className="h-4 w-4 text-emerald-500" /> },
-                  { label: 'Total Net', value: `${payrollStats.net.toLocaleString()} KES`, icon: <Wallet className="h-4 w-4 text-blue-500" /> },
-                  { label: 'Deductions', value: `${payrollStats.deductions.toLocaleString()} KES`, icon: <ArrowDownRight className="h-4 w-4 text-red-500" /> },
-                  { label: 'Last Pay Date', value: payrollStats.lastDate ? new Date(payrollStats.lastDate).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '-', icon: <Calendar className="h-4 w-4 text-purple-500" /> },
+                  { label: 'Total Gross', value: `${payrollStats.gross.toLocaleString()} KES`, icon: <TrendingUp className="h-4 w-4" />, color: 'text-emerald-600 dark:text-emerald-400', bg: 'bg-emerald-50 dark:bg-emerald-950/30' },
+                  { label: 'Total Net', value: `${payrollStats.net.toLocaleString()} KES`, icon: <Wallet className="h-4 w-4" />, color: 'text-blue-600 dark:text-blue-400', bg: 'bg-blue-50 dark:bg-blue-950/30' },
+                  { label: 'Deductions', value: `${payrollStats.deductions.toLocaleString()} KES`, icon: <ArrowDownRight className="h-4 w-4" />, color: 'text-red-600 dark:text-red-400', bg: 'bg-red-50 dark:bg-red-950/30' },
+                  { label: 'Last Pay Date', value: payrollStats.lastDate ? new Date(payrollStats.lastDate).toLocaleDateString('en-KE', { day: 'numeric', month: 'short' }) : '-', icon: <Calendar className="h-4 w-4" />, color: 'text-purple-600 dark:text-purple-400', bg: 'bg-purple-50 dark:bg-purple-950/30' },
                 ].map((s) => (
-                  <div key={s.label} className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
-                    <div className="mt-0.5 flex-shrink-0">{s.icon}</div>
+                  <div key={s.label} className={`flex items-center gap-3 p-4 rounded-xl ${s.bg}`}>
+                    <span className={s.color}>{s.icon}</span>
                     <div>
                       <p className="text-xs text-muted-foreground">{s.label}</p>
-                      <p className="text-lg font-bold">{s.value}</p>
+                      <p className={`text-sm font-bold ${s.color}`}>{s.value}</p>
                     </div>
                   </div>
                 ))}

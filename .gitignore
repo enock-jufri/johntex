@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+.venv/
+.python-version
+*.egg-info/
+dist/
+.tmp/
+*.tsbuildinfo
+node_modules/
+frontend/dist/assets/

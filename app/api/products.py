@@ -1,6 +1,6 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from typing import List
@@ -21,10 +21,11 @@ router = APIRouter(prefix="/products", tags=["products"])
 async def read_products(
     skip: int = 0,
     limit: int = 100,
+    active: bool = Query(False, description="Filter to only active products"),
     session: AsyncSession = Depends(get_session),
     current_user=Depends(get_current_clerk)
 ):
-    return await crud_product.get_products(session, skip=skip, limit=limit)
+    return await crud_product.get_products(session, skip=skip, limit=limit, active_only=active)
 
 
 @router.post("/", response_model=ProductRead)

@@ -11,6 +11,7 @@ import httpx
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.enums import MpesaTransactionStatus, PaymentStatus
 from app.timezone import eat_now
 
 from ..metrics import mpesa_callbacks_total
@@ -242,10 +243,10 @@ class MpesaClient:
             originator_conversation_id=originator_id,
             response_code=response_code,
             response_description=response_desc,
-            status="processing" if is_success else "failed",
+            status=MpesaTransactionStatus.processing.value if is_success else MpesaTransactionStatus.failed.value,
         )
         session.add(transaction)
-        await session.commit()
+        await session.flush()
         await session.refresh(transaction)
 
         if not is_success:
