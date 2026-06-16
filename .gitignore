@@ -2,6 +2,10 @@ __pycache__/
 *.pyc
 *.pyo
 .env
+.env.prod
+.env.*.local
+.claude/settings.local.json
+.local/
 .venv/
 .python-version
 *.egg-info/
