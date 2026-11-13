@@ -2,9 +2,11 @@ fastapi
 uvicorn[standard]
 sqlmodel
 asyncpg
+greenlet
 alembic
 python-jose[cryptography]
 passlib[bcrypt]
+bcrypt<4.0
 python-multipart
 pydantic
 python-dotenv

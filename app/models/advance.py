@@ -1,4 +1,5 @@
-from datetime import date, datetime
+from datetime import date
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -20,10 +21,10 @@ class Advance(SQLModel, table=True):
     notes: Optional[str] = None
     approved: bool = False
     approved_by: Optional[int] = Field(foreign_key="users.id")
-    created_at: datetime = Field(default_factory=_eatnow)
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
     payment_method: str = "cash"
     payment_status: str = "pending"
-    paid_at: Optional[datetime] = None
+    paid_at: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_advances_date", "advance_date"),

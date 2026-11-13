@@ -1,4 +1,4 @@
-from datetime import datetime
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -19,7 +19,7 @@ class WorkerWallet(SQLModel, table=True):
     total_advanced: float = 0.0
     total_paid: float = 0.0
     balance: float = 0.0  # total_earned - total_advanced - total_paid
-    updated_at: datetime = Field(default_factory=_eatnow)
+    updated_at: NaiveDatetime = Field(default_factory=_eatnow)
 
 
 class WalletTransaction(SQLModel, table=True):
@@ -33,7 +33,7 @@ class WalletTransaction(SQLModel, table=True):
     reference_type: str  # 'production_log' | 'advance' | 'payroll'
     reference_id: int
     description: Optional[str] = None
-    created_at: datetime = Field(default_factory=_eatnow)
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
 
     __table_args__ = (
         Index("ix_wallet_txn_worker", "worker_id"),

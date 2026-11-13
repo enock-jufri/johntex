@@ -1,4 +1,5 @@
-from datetime import date, datetime
+from datetime import date
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -20,11 +21,11 @@ class Payroll(SQLModel, table=True):
     total_deductions: float = 0.0
     net_pay: float
     processed: bool = True
-    processed_at: datetime = Field(default_factory=_eatnow)
-    created_at: datetime = Field(default_factory=_eatnow)
+    processed_at: NaiveDatetime = Field(default_factory=_eatnow)
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
     payment_method: str = "cash"
     payment_status: str = "pending"
-    paid_at: Optional[datetime] = None
+    paid_at: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_payrolls_week_start", "week_start"),

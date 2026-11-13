@@ -1,4 +1,4 @@
-from datetime import datetime
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -19,7 +19,7 @@ class AuditLog(SQLModel, table=True):
     ip_address: Optional[str] = None
     user_agent: Optional[str] = None
     location: Optional[str] = None
-    event_time: datetime = Field(default_factory=_eatnow)
+    event_time: NaiveDatetime = Field(default_factory=_eatnow)
 
     __table_args__ = (
         Index("ix_audit_log_user", "user_id"),

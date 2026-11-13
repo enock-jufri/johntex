@@ -1,3 +1,4 @@
+from pydantic import NaiveDatetime
 from sqlmodel import Field, SQLModel
 
 

@@ -1,4 +1,5 @@
-from datetime import date, datetime
+from datetime import date
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -21,8 +22,8 @@ class ProductionLog(SQLModel, table=True):
     notes: Optional[str] = None
     approved: bool = False
     approved_by: Optional[int] = Field(foreign_key="users.id")
-    created_at: datetime = Field(default_factory=_eatnow)
-    updated_at: Optional[datetime] = None
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
+    updated_at: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_production_log_date", "production_date"),

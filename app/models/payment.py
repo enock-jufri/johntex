@@ -1,4 +1,4 @@
-from datetime import datetime
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -27,8 +27,8 @@ class MpesaTransaction(SQLModel, table=True):
     transaction_id: Optional[str] = None
     status: str = "pending"
     retry_count: int = 0
-    created_at: datetime = Field(default_factory=_eatnow)
-    updated_at: Optional[datetime] = None
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
+    updated_at: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_mpesa_txn_worker", "worker_id"),

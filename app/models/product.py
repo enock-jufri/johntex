@@ -1,4 +1,4 @@
-from datetime import datetime
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -20,8 +20,8 @@ class Product(SQLModel, table=True):
     active: bool = True
     created_by: Optional[int] = Field(foreign_key="users.id")
     updated_by: Optional[int] = Field(foreign_key="users.id")
-    created_at: datetime = Field(default_factory=_eatnow)
-    updated_at: Optional[datetime] = None
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
+    updated_at: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_products_active", "active"),

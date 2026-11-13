@@ -1,4 +1,4 @@
-from datetime import datetime
+from pydantic import NaiveDatetime
 from typing import Optional
 
 from sqlmodel import Field, Index, SQLModel
@@ -23,8 +23,8 @@ class User(SQLModel, table=True):
     hashed_password: str
     role_id: int = Field(foreign_key="roles.id")
     active: bool = True
-    created_at: datetime = Field(default_factory=_eatnow)
-    last_login: Optional[datetime] = None
+    created_at: NaiveDatetime = Field(default_factory=_eatnow)
+    last_login: Optional[NaiveDatetime] = None
 
     __table_args__ = (
         Index("ix_users_active", "active"),
